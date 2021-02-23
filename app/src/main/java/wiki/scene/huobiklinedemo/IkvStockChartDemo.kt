@@ -47,6 +47,8 @@ class IkvStockChartDemo : AppCompatActivity() {
     // 副图指标下标
     private var subIndex = -1
 
+    private var isFirst = true
+
     private val wsHandler by lazy {
         WebSocketHandler.getDefault()
     }
@@ -75,7 +77,7 @@ class IkvStockChartDemo : AppCompatActivity() {
         kLineChartView.setRefreshListener {
             kLineChartView.postDelayed({
                 kLineChartView.refreshEnd()
-            },1000)
+            }, 1000)
         }
 
         maText.setOnClickListener {
@@ -212,6 +214,20 @@ class IkvStockChartDemo : AppCompatActivity() {
                 getSubData()
             }
 
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unSubData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isFirst) {
+            getAllData()
+        } else {
+            isFirst = true
         }
     }
 
