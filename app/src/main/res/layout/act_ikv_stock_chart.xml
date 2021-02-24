@@ -7,9 +7,27 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/tvCurrentPriceLable"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="市价"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tvCurrentPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tvCurrentPriceLable"
+        android:textColor="@color/white" />
+
+    <TextView
         android:id="@+id/text1"
         android:layout_width="50dp"
         android:layout_height="40dp"
+        android:layout_below="@+id/tvCurrentPriceLable"
         android:gravity="center"
         android:text="主图"
         android:textColor="@color/white" />
@@ -18,6 +36,7 @@
         android:id="@+id/maText"
         android:layout_width="50dp"
         android:layout_height="40dp"
+        android:layout_below="@+id/tvCurrentPriceLable"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/text1"
         android:gravity="center"
@@ -29,6 +48,7 @@
         android:id="@+id/bollText"
         android:layout_width="50dp"
         android:layout_height="40dp"
+        android:layout_below="@+id/tvCurrentPriceLable"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/maText"
         android:gravity="center"
@@ -39,6 +59,7 @@
         android:id="@+id/mainHide"
         android:layout_width="50dp"
         android:layout_height="40dp"
+        android:layout_below="@+id/tvCurrentPriceLable"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/bollText"
         android:gravity="center"
@@ -153,4 +174,5 @@
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
         android:background="#17181f" />
+
 </RelativeLayout>

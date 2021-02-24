@@ -1,5 +1,6 @@
 package wiki.scene.huobiklinedemo
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
@@ -17,6 +18,7 @@ import com.zhangke.websocket.WebSocketHandler
 import kotlinx.android.synthetic.main.act_ikv_stock_chart.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import wiki.scene.huobiklinedemo.socket.entity.CurrentPriceInfo
 import wiki.scene.huobiklinedemo.socket.entity.SubKLineInfo
 import wiki.scene.huobiklinedemo.socket.event.MessageEvent
 import wiki.scene.huobiklinedemo.socket.request.ReqInfo
@@ -63,6 +65,7 @@ class IkvStockChartDemo : AppCompatActivity() {
 
         kLineChartView.justShowLoading()
         getAllData()
+        getCurrentPrice()
 
     }
 
@@ -153,10 +156,16 @@ class IkvStockChartDemo : AppCompatActivity() {
     }
 
     private fun unSubData() {
-        val subInfo = UnsubInfo("market.btcusdt.kline.1min", "unsubData")
+        val unsubInfo = UnsubInfo("market.btcusdt.kline.1min", "unsubData")
+        wsHandler.send(GsonUtils.toJson(unsubInfo))
+    }
+
+    private fun getCurrentPrice() {
+        val subInfo = SubInfo("market.btcusdt.trade.detail", "currentPrice")
         wsHandler.send(GsonUtils.toJson(subInfo))
     }
 
+    @SuppressLint("SetTextI18n")
     @Subscribe
     fun onMessageEvent(event: MessageEvent?) {
         event?.let {
@@ -174,7 +183,6 @@ class IkvStockChartDemo : AppCompatActivity() {
                     kLineEntity.Date = TimeUtils.millis2String(kLineInfo1.id * 1000L, "HH:mm")
 
                     runOnUiThread {
-                        LogUtils.e("==>【${kLineEntity.Date}】【${datas.last().date}】")
                         if (datas.last().date == kLineEntity.Date) {
                             datas[datas.size - 1] = kLineEntity
                             DataHelper.calculate(datas)
@@ -212,6 +220,14 @@ class IkvStockChartDemo : AppCompatActivity() {
                 }
                 unSubData()
                 getSubData()
+            } else if (JsonUtils.getString(event.msg, "ch") == "market.btcusdt.trade.detail") {
+                runOnUiThread {
+                    val currentPriceInfo =
+                        GsonUtils.fromJson(event.msg, CurrentPriceInfo::class.java)
+                    if (currentPriceInfo.tick.data.size > 0) {
+                        tvCurrentPrice.text = "$${currentPriceInfo.tick.data[0].price}"
+                    }
+                }
             }
 
         }
